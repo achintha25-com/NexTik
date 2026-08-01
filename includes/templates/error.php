@@ -1,0 +1,1 @@
+<section class="section"><div class="container narrow"><div class="empty-state"><div class="error-code"><?= http_response_code() ?></div><h1><?= e($title) ?></h1><p><?= e($message) ?></p><a class="btn btn-primary" href="<?= e(app_url()) ?>">Return home</a></div></div></section>
