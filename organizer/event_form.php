@@ -10,25 +10,23 @@ if ($id && (! $event || (int) $event['organizer_id'] !== (int) $user['id'])) {
     render('error', ['title' => 'Event not found', 'message' => 'The requested event could not be found.']);
     exit;
 }
+$ticketOptions = $id ? ticket_options_for_event($id) : [];
 $errors = [];
 if (is_post()) {
     verify_csrf();
     $_POST['organizer_id'] = $user['id'];
     [$image, $imageErrors] = process_event_image($event['image'] ?? null);
-    $sold = $event ? (int) $event['total_tickets'] - (int) $event['available_tickets'] : 0;
-    [$data, $errors] = event_validation($_POST, false, $sold);
-    $errors = array_merge($imageErrors, $errors);
+    [$data, $errors] = event_validation($_POST, false);
+    [$options, $optionErrors] = ticket_options_validation(parse_ticket_options_from_post($_POST), $id);
+    $errors = array_merge($imageErrors, $errors, $optionErrors);
     if ($errors === []) {
-        $available = $data['total_tickets'] - $sold;
-        if ($event) {
-            db()->prepare('UPDATE events SET category_id=?, title=?, slug=?, description=?, venue=?, city=?, event_date=?, start_time=?, end_time=?, price=?, total_tickets=?, available_tickets=?, image=?, is_featured=?, status=? WHERE id=? AND organizer_id=?')->execute([$data['category_id'], $data['title'], unique_slug($data['title'], $id), $data['description'], $data['venue'], $data['city'], $data['event_date'], $data['start_time'], $data['end_time'] ?: null, $data['price'], $data['total_tickets'], $available, $image, $data['is_featured'], $data['status'], $id, $user['id']]);
-        } else {
-            db()->prepare('INSERT INTO events (organizer_id, category_id, title, slug, description, venue, city, event_date, start_time, end_time, price, total_tickets, available_tickets, image, is_featured, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')->execute([$user['id'], $data['category_id'], $data['title'], unique_slug($data['title']), $data['description'], $data['venue'], $data['city'], $data['event_date'], $data['start_time'], $data['end_time'] ?: null, $data['price'], $data['total_tickets'], $data['total_tickets'], $image, $data['is_featured'], $data['status']]);
-        }
+        $eventId = save_event($id, $data, $image, false, (int) $user['id']);
+        save_ticket_options($eventId, $options);
         flash('success', 'Event saved successfully.');
         redirect_to('organizer-events');
     }
     $event = array_merge($event ?? [], $data, ['image' => $image]);
+    $ticketOptions = parse_ticket_options_from_post($_POST);
 }
 $categories = db()->query('SELECT id, name FROM categories ORDER BY name')->fetchAll();
 $title = $event ? 'Edit event' : 'Create event';
@@ -45,7 +43,7 @@ require dirname(__DIR__).'/includes/header.php';
 <div class="form-group"><label for="image">Event poster</label><input class="form-control" id="image" name="image" type="file" accept="image/jpeg,image/png,image/webp"><small class="form-hint">Upload a JPG, PNG, or WEBP poster up to 5 MB. Leave empty to keep the current poster.</small></div>
 <div class="form-row"><div class="form-group"><label for="venue">Venue *</label><input class="form-control" id="venue" name="venue" value="<?= e($event['venue'] ?? '') ?>" required></div><div class="form-group"><label for="city">City *</label><input class="form-control" id="city" name="city" value="<?= e($event['city'] ?? 'Colombo') ?>" required></div></div>
 <div class="form-row three"><div class="form-group"><label for="event_date">Date *</label><input class="form-control" id="event_date" name="event_date" type="date" min="<?= date('Y-m-d') ?>" value="<?= e($event['event_date'] ?? '') ?>" required></div><div class="form-group"><label for="start_time">Start *</label><input class="form-control" id="start_time" name="start_time" type="time" value="<?= e(substr((string)($event['start_time'] ?? ''),0,5)) ?>" required></div><div class="form-group"><label for="end_time">End</label><input class="form-control" id="end_time" name="end_time" type="time" value="<?= e(substr((string)($event['end_time'] ?? ''),0,5)) ?>"></div></div>
-<div class="form-row"><div class="form-group"><label for="price">Price (LKR) *</label><input class="form-control" id="price" name="price" type="number" min="0" step="0.01" value="<?= e($event['price'] ?? '') ?>" required></div><div class="form-group"><label for="total_tickets">Total tickets *</label><input class="form-control" id="total_tickets" name="total_tickets" type="number" min="1" value="<?= e($event['total_tickets'] ?? '') ?>" required></div></div>
+<?php require dirname(__DIR__).'/includes/templates/partials/ticket-options-form.php'; ?>
 <div class="form-row"><div class="form-group"><label for="status">Status *</label><select class="form-control" id="status" name="status"><?php foreach(['draft','published','postponed','cancelled'] as $status): ?><option value="<?= $status ?>" <?= ($event['status'] ?? 'draft')===$status?'selected':'' ?>><?= ucfirst($status) ?></option><?php endforeach; ?></select></div><div class="form-group checkbox-block"><label class="checkbox-label"><input type="checkbox" name="is_featured" value="1" <?= !empty($event['is_featured'])?'checked':'' ?>> Feature this event</label></div></div>
 <div class="actions-row"><button class="btn btn-primary" type="submit">Save event</button><a class="btn btn-secondary" href="<?= e(app_url('organizer-events')) ?>">Cancel</a></div></form>
 </div></div></section>

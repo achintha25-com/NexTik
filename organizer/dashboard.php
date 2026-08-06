@@ -23,7 +23,7 @@ $bookingStatsStatement = db()->prepare(
         COALESCE(SUM(total_amount), 0) AS revenue
      FROM bookings b
      JOIN events e ON e.id = b.event_id
-     WHERE e.organizer_id = ? AND b.status = 'confirmed'"
+     WHERE e.organizer_id = ? AND b.status = 'confirmed' AND b.payment_status = 'paid'"
 );
 $bookingStatsStatement->execute([$user['id']]);
 $bookingStats = $bookingStatsStatement->fetch() ?: [

@@ -17,6 +17,7 @@
                     <tr>
                         <th>Reference</th>
                         <th>Event</th>
+                        <th>Type</th>
                         <th>Date</th>
                         <th>Tickets</th>
                         <th>Total</th>
@@ -27,7 +28,7 @@
                 <tbody>
                     <?php if (! $bookings): ?>
                         <tr>
-                            <td colspan="7" class="empty-state">
+                            <td colspan="8" class="empty-state">
                                 You have no bookings yet.
                                 <a class="text-link" href="<?= e(app_url()) ?>">Explore events</a>.
                             </td>
@@ -41,6 +42,7 @@
                                 <?= e($booking['event_title']) ?>
                                 <small class="table-subtitle"><?= e($booking['venue']) ?>, <?= e($booking['city']) ?></small>
                             </td>
+                            <td><?= e($booking['ticket_option_name'] ?: 'General') ?></td>
                             <td><?= e(date('M j, Y', strtotime($booking['event_date']))) ?></td>
                             <td><?= (int) $booking['quantity'] ?></td>
                             <td>LKR <?= number_format((float) $booking['total_amount'], 2) ?></td>
