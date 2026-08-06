@@ -10,7 +10,7 @@ $stats = [
     'users' => (int) db()->query('SELECT COUNT(*) FROM users')->fetchColumn(),
     'events' => (int) db()->query('SELECT COUNT(*) FROM events')->fetchColumn(),
     'bookings' => (int) db()->query('SELECT COUNT(*) FROM bookings')->fetchColumn(),
-    'revenue' => (float) db()->query("SELECT COALESCE(SUM(total_amount), 0) FROM bookings WHERE status = 'confirmed'")->fetchColumn(),
+    'revenue' => (float) db()->query("SELECT COALESCE(SUM(total_amount), 0) FROM bookings WHERE status = 'confirmed' AND payment_status = 'paid'")->fetchColumn(),
 ];
 
 $openMessages = (int) db()->query("SELECT COUNT(*) FROM contact_messages WHERE status = 'open'")->fetchColumn();

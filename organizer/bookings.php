@@ -43,11 +43,11 @@ require dirname(__DIR__).'/includes/header.php';
         <div class="table-card">
             <table>
                 <thead>
-                    <tr><th>Reference</th><th>Customer</th><th>Email</th><th>Tickets</th><th>Total</th><th>Status</th></tr>
+                    <tr><th>Reference</th><th>Customer</th><th>Email</th><th>Type</th><th>Tickets</th><th>Total</th><th>Status</th></tr>
                 </thead>
                 <tbody>
                     <?php if (! $bookings): ?>
-                        <tr><td colspan="6" class="empty-state">No bookings for this event yet.</td></tr>
+                        <tr><td colspan="7" class="empty-state">No bookings for this event yet.</td></tr>
                     <?php endif; ?>
 
                     <?php foreach ($bookings as $booking): ?>
@@ -55,6 +55,7 @@ require dirname(__DIR__).'/includes/header.php';
                             <td><?= e($booking['booking_reference']) ?></td>
                             <td><?= e($booking['customer_name']) ?></td>
                             <td><?= e($booking['customer_email']) ?></td>
+                            <td><?= e($booking['ticket_option_name'] ?: 'General') ?></td>
                             <td><?= (int) $booking['quantity'] ?></td>
                             <td>LKR <?= number_format((float) $booking['total_amount'], 2) ?></td>
                             <td><span class="status-badge status-<?= e($booking['status']) ?>"><?= e(ucfirst($booking['status'])) ?></span></td>

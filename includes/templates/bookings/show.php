@@ -19,6 +19,9 @@
 
             <div class="receipt-status">
                 <span class="status-badge status-<?= e($booking['status']) ?>"><?= e(ucfirst($booking['status'])) ?></span>
+                <?php if (! empty($booking['payment_status']) && $booking['payment_status'] === 'paid'): ?>
+                    <span class="status-badge status-confirmed">Paid</span>
+                <?php endif; ?>
             </div>
 
             <h2><?= e($booking['event_title']) ?></h2>
@@ -29,8 +32,13 @@
                 <div><small>Time</small><strong><?= e(date('g:i A', strtotime($booking['start_time']))) ?></strong></div>
                 <div><small>Venue</small><strong><?= e($booking['venue']) ?>, <?= e($booking['city']) ?></strong></div>
                 <div><small>Customer</small><strong><?= e($booking['customer_name']) ?></strong></div>
+                <div><small>Ticket type</small><strong><?= e($booking['ticket_option_name'] ?: 'General') ?></strong></div>
                 <div><small>Tickets</small><strong><?= (int) $booking['quantity'] ?></strong></div>
                 <div><small>Total</small><strong>LKR <?= number_format((float) $booking['total_amount'], 2) ?></strong></div>
+                <?php if (! empty($booking['payment_reference'])): ?>
+                    <div><small>Payment ref</small><strong><?= e($booking['payment_reference']) ?></strong></div>
+                    <div><small>Payment method</small><strong><?= e(ucfirst((string) ($booking['payment_method'] ?? 'card'))) ?></strong></div>
+                <?php endif; ?>
             </div>
 
             <div class="actions-row top-gap no-print">
