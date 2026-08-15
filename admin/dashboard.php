@@ -61,19 +61,26 @@ require dirname(__DIR__).'/includes/header.php';
         <div class="table-card">
             <h2>Recent bookings</h2>
             <table>
-                <thead><tr><th>Reference</th><th>Customer</th><th>Event</th><th>Total</th><th>Status</th></tr></thead>
+                <thead><tr><th>Reference</th><th>Customer</th><th>Event</th><th>Total</th><th>Status</th><th>Action</th></tr></thead>
                 <tbody>
                     <?php if (! $recentBookings): ?>
-                        <tr><td colspan="5" class="empty-state">No bookings yet.</td></tr>
+                        <tr><td colspan="6" class="empty-state">No bookings yet.</td></tr>
                     <?php endif; ?>
 
                     <?php foreach ($recentBookings as $booking): ?>
                         <tr>
-                            <td><a class="text-link" href="<?= e(app_url('booking', ['id' => $booking['id']])) ?>"><?= e($booking['booking_reference']) ?></a></td>
+                            <td><strong><?= e($booking['booking_reference']) ?></strong></td>
                             <td><?= e($booking['customer_name']) ?></td>
                             <td><?= e($booking['event_title']) ?></td>
                             <td>LKR <?= number_format((float) $booking['total_amount'], 2) ?></td>
                             <td><span class="status-badge status-<?= e($booking['status']) ?>"><?= e(ucfirst($booking['status'])) ?></span></td>
+                            <td>
+                                <div class="table-actions">
+                                    <a class="icon-btn" href="<?= e(app_url('booking', ['id' => $booking['id']])) ?>" title="View details" aria-label="View booking <?= e($booking['booking_reference']) ?>">
+                                        <?= icon('view') ?>
+                                    </a>
+                                </div>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

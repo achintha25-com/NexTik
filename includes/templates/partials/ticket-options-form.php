@@ -32,7 +32,7 @@ if ($options === []) {
                     <label>Total tickets</label>
                     <input class="form-control" name="option_total[]" type="number" min="1" value="<?= e($option['total_tickets'] ?? '') ?>" required>
                 </div>
-                <button class="btn btn-danger btn-sm ticket-option-remove" type="button" data-remove-ticket-option aria-label="Remove ticket option">&times;</button>
+                <button class="icon-btn icon-btn-danger ticket-option-remove" type="button" data-remove-ticket-option title="Remove ticket option" aria-label="Remove ticket option"><?= icon('delete') ?></button>
             </div>
         <?php endforeach; ?>
     </div>

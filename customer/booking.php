@@ -13,7 +13,11 @@ if ($bookingId && $step !== 'pay' && query_string('page') !== 'book' && ! isset(
         render('error', ['title' => 'Booking not found', 'message' => 'The requested booking could not be found.']);
         exit;
     }
-    render('bookings/show', ['title' => 'Booking '.$booking['booking_reference'], 'booking' => $booking]);
+    render('bookings/show', [
+        'title' => 'Booking '.$booking['booking_reference'],
+        'bodyClass' => 'customer-page booking-pass-page',
+        'booking' => $booking,
+    ]);
     exit;
 }
 

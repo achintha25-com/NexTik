@@ -56,8 +56,12 @@ require dirname(__DIR__).'/includes/header.php';
                             <td><span class="status-badge status-<?= e($event['status']) ?>"><?= e(ucfirst($event['status'])) ?></span></td>
                             <td>
                                 <div class="table-actions">
-                                    <a class="btn btn-secondary btn-sm" href="<?= e(app_url('organizer-event-form', ['id' => $event['id']])) ?>">Edit</a>
-                                    <a class="btn btn-secondary btn-sm" href="<?= e(app_url('organizer-event-bookings', ['id' => $event['id']])) ?>">Bookings</a>
+                                    <a class="icon-btn" href="<?= e(app_url('organizer-event-form', ['id' => $event['id']])) ?>" title="Edit event" aria-label="Edit <?= e($event['title']) ?>">
+                                        <?= icon('edit') ?>
+                                    </a>
+                                    <a class="icon-btn" href="<?= e(app_url('organizer-event-bookings', ['id' => $event['id']])) ?>" title="View bookings" aria-label="View bookings for <?= e($event['title']) ?>">
+                                        <?= icon('ticket') ?>
+                                    </a>
                                 </div>
                             </td>
                         </tr>

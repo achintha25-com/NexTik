@@ -9,7 +9,7 @@
         <a href="<?= e(app_url('profile')) ?>">Profile</a>
         <form method="post" action="<?= e(app_url('logout')) ?>" class="inline-form">
             <?= csrf_field() ?>
-            <button class="btn btn-outline btn-sm" type="submit">Logout</button>
+            <button class="btn btn-logout btn-sm" type="submit">Logout</button>
         </form>
     <?php else: ?>
         <a href="<?= e(app_url('login', ['role' => 'customer'])) ?>">Login</a>
