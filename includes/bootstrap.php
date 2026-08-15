@@ -126,7 +126,11 @@ function app_url(string $page = 'home', array $parameters = []): string
 
 function asset_url(string $path): string
 {
-    return web_root().'/'.ltrim($path, '/');
+    $relative = ltrim($path, '/');
+    $full = dirname(__DIR__).'/'.$relative;
+    $version = is_file($full) ? (string) filemtime($full) : (string) time();
+
+    return web_root().'/'.$relative.'?v='.$version;
 }
 
 function redirect_to(string $page, array $parameters = []): never

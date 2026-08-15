@@ -13,9 +13,11 @@ $countdown = match (true) {
     $days > 1 => 'In '.$days.' days',
     default => abs($days).' days ago',
 };
+$celebrate = ! empty($celebrate);
 $heroLine = match (true) {
     $isCancelled => 'This reservation is no longer active.',
     $isPast => 'This night has already taken place.',
+    $celebrate => 'Tickets locked. Your pass is ready.',
     default => $countdown.' · '.$booking['venue'].', '.$booking['city'],
 };
 $timeLabel = date('g:i A', strtotime((string) $booking['start_time']));
@@ -24,13 +26,13 @@ if (! empty($booking['end_time'])) {
 }
 ?>
 
-<section class="about-hero customer-hero">
+<section class="about-hero customer-hero"<?= $celebrate ? ' data-celebrate' : '' ?>>
     <div class="about-hero-backdrop" aria-hidden="true"></div>
     <div class="container about-hero-layout">
         <div class="original-copy">
-            <span class="original-kicker"><i></i> BOOKING PASS</span>
-            <h1><?= e($booking['event_title']) ?></h1>
-            <p><?= e($heroLine) ?></p>
+            <span class="original-kicker"><?= $celebrate ? 'YOU ARE IN' : 'BOOKING PASS' ?></span>
+            <h1><?= $celebrate ? 'Night locked in.' : e($booking['event_title']) ?></h1>
+            <p><?= $celebrate ? e($booking['event_title']).' · '.$heroLine : e($heroLine) ?></p>
             <div class="original-actions no-print">
                 <button class="btn btn-primary" type="button" onclick="window.print()">Print pass</button>
                 <a class="original-link" href="<?= e($backUrl) ?>">Back to bookings <span>→</span></a>
@@ -40,6 +42,11 @@ if (! empty($booking['end_time'])) {
 </section>
 
 <section class="booking-pass-workspace">
+    <?php if ($celebrate): ?>
+        <div class="container">
+            <p class="booking-celebrate-banner no-print">You are on the list. Print the pass or keep this page handy at the door.</p>
+        </div>
+    <?php endif; ?>
     <div class="container booking-pass-layout">
         <article class="booking-board receipt">
             <div class="print-pass-brand">
@@ -62,6 +69,7 @@ if (! empty($booking['end_time'])) {
                         <p><?= e($booking['venue']) ?>, <?= e($booking['city']) ?></p>
                     </div>
                     <div class="receipt-status">
+                        <?php if ($celebrate): ?><span class="status-badge status-just-booked">Just booked</span><?php endif; ?>
                         <span class="status-badge status-<?= e($booking['status']) ?>"><?= e(ucfirst($booking['status'])) ?></span>
                         <?php if ($isPaid): ?>
                             <span class="status-badge status-confirmed">Paid</span>

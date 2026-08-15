@@ -1,3 +1,34 @@
+const loader = document.querySelector('[data-loader]');
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const hasSeenApp = sessionStorage.getItem('nextik-ready') === '1';
+const hideLoader = () => {
+    document.documentElement.classList.remove('is-loading');
+    sessionStorage.setItem('nextik-ready', '1');
+    if (!loader || loader.classList.contains('is-done')) return;
+    loader.classList.add('is-done');
+    loader.hidden = true;
+    window.setTimeout(() => loader.remove(), 280);
+};
+const showLoaderIfSlow = () => {
+    if (!loader || hasSeenApp || prefersReducedMotion || document.readyState === 'complete') return;
+    loader.hidden = false;
+    loader.classList.add('is-on');
+    document.documentElement.classList.add('is-loading');
+};
+const slowTimer = window.setTimeout(showLoaderIfSlow, 400);
+const finishLoad = () => {
+    window.clearTimeout(slowTimer);
+    hideLoader();
+};
+if (hasSeenApp || prefersReducedMotion || document.readyState === 'complete') finishLoad();
+else window.addEventListener('load', finishLoad);
+window.setTimeout(finishLoad, 2500);
+
+const siteHeader = document.querySelector('[data-site-header]');
+const syncHeader = () => siteHeader?.classList.toggle('is-scrolled', window.scrollY > 18);
+syncHeader();
+window.addEventListener('scroll', syncHeader, { passive: true });
+
 document.querySelectorAll('[data-password-toggle]').forEach((button) => {
     button.addEventListener('click', () => {
         const input = document.getElementById(button.dataset.passwordToggle);
@@ -5,11 +36,16 @@ document.querySelectorAll('[data-password-toggle]').forEach((button) => {
         const show = input.type === 'password';
         input.type = show ? 'text' : 'password';
         button.textContent = show ? 'Hide' : 'Show';
+        button.setAttribute('aria-pressed', show ? 'true' : 'false');
+        button.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
     });
 });
 
-document.querySelector('[data-menu-toggle]')?.addEventListener('click', () => {
-    document.querySelector('[data-menu]')?.classList.toggle('is-open');
+const menuToggle = document.querySelector('[data-menu-toggle]');
+const siteMenu = document.querySelector('[data-menu]');
+menuToggle?.addEventListener('click', () => {
+    const isOpen = siteMenu?.classList.toggle('is-open');
+    menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 });
 
 document.querySelectorAll('[data-confirm]').forEach((form) => {
@@ -101,4 +137,56 @@ document.querySelector('[data-card-number]')?.addEventListener('input', (event) 
 
 document.querySelector('[data-card-expiry]')?.addEventListener('input', (event) => {
     event.target.value = formatCardExpiry(event.target.value);
+});
+
+function fireBookingConfetti() {
+    if (!window.confetti) return;
+    const colors = ['#ed1722', '#ff4b54', '#ffffff', '#fbbf24', '#fb7185'];
+    const defaults = { colors, zIndex: 9999, disableForReducedMotion: true };
+
+    window.confetti({ ...defaults, particleCount: 140, spread: 78, startVelocity: 48, origin: { y: 0.62 }, scalar: 1.05 });
+    window.confetti({ ...defaults, particleCount: 40, spread: 100, scalar: 1.35, shapes: ['star'], origin: { y: 0.55 } });
+
+    const end = Date.now() + 1600;
+    const sides = () => {
+        window.confetti({ ...defaults, particleCount: 4, angle: 60, spread: 55, origin: { x: 0 } });
+        window.confetti({ ...defaults, particleCount: 4, angle: 120, spread: 55, origin: { x: 1 } });
+        if (Date.now() < end) requestAnimationFrame(sides);
+    };
+    sides();
+}
+
+if (document.querySelector('[data-celebrate]') && !prefersReducedMotion) {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js';
+    script.async = true;
+    script.onload = fireBookingConfetti;
+    document.head.appendChild(script);
+}
+
+document.querySelectorAll('[data-tilt-card]').forEach((card) => {
+    if (prefersReducedMotion) return;
+    const shine = card.querySelector('.spotlight-shine');
+    const reset = () => {
+        card.classList.remove('is-tilting');
+        card.style.setProperty('--tilt-x', '0deg');
+        card.style.setProperty('--tilt-y', '0deg');
+        card.style.setProperty('--tilt-lift', '0px');
+        card.style.setProperty('--tilt-scale', '1');
+        if (shine) shine.style.background = '';
+    };
+    card.addEventListener('mousemove', (event) => {
+        const box = card.getBoundingClientRect();
+        const x = (event.clientX - box.left) / Math.max(box.width, 1);
+        const y = (event.clientY - box.top) / Math.max(box.height, 1);
+        card.classList.add('is-tilting');
+        card.style.setProperty('--tilt-x', `${((0.5 - y) * 16).toFixed(2)}deg`);
+        card.style.setProperty('--tilt-y', `${((x - 0.5) * 20).toFixed(2)}deg`);
+        card.style.setProperty('--tilt-lift', '-12px');
+        card.style.setProperty('--tilt-scale', '1.04');
+        if (shine) {
+            shine.style.background = `radial-gradient(circle at ${Math.round(x * 100)}% ${Math.round(y * 100)}%, rgba(255,255,255,.4), transparent 55%)`;
+        }
+    });
+    card.addEventListener('mouseleave', reset);
 });

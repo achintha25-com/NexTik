@@ -13,10 +13,16 @@ if ($bookingId && $step !== 'pay' && query_string('page') !== 'book' && ! isset(
         render('error', ['title' => 'Booking not found', 'message' => 'The requested booking could not be found.']);
         exit;
     }
+    $celebrate = (int) ($_SESSION['celebrate_booking_id'] ?? 0) === $bookingId;
+    if ($celebrate) {
+        unset($_SESSION['celebrate_booking_id']);
+    }
+
     render('bookings/show', [
         'title' => 'Booking '.$booking['booking_reference'],
-        'bodyClass' => 'customer-page booking-pass-page',
+        'bodyClass' => 'customer-page booking-pass-page'.($celebrate ? ' is-celebrating' : ''),
         'booking' => $booking,
+        'celebrate' => $celebrate,
     ]);
     exit;
 }
@@ -78,7 +84,8 @@ if ($step === 'pay') {
                     $paymentReference
                 );
                 clear_pending_booking();
-                flash('success', 'Payment successful. Your booking is confirmed.');
+                $_SESSION['celebrate_booking_id'] = $newBooking;
+                flash('success', 'You are in. Your booking is confirmed.');
                 redirect_to('booking', ['id' => $newBooking]);
             } catch (Throwable $exception) {
                 $errors[] = $exception instanceof RuntimeException ? $exception->getMessage() : 'Payment could not be completed.';

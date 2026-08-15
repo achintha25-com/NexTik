@@ -1,4 +1,4 @@
-<nav class="nav-links" data-menu>
+<nav class="nav-links" id="site-menu" data-menu>
     <a href="<?= e(app_url()) ?>">All Events</a>
     <a href="<?= e(app_url('about')) ?>">About</a>
     <a href="<?= e(app_url('contact')) ?>">Contact</a>
