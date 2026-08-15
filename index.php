@@ -53,6 +53,16 @@ $featured = ($search === '' && $category === '' && $city === '' && $date === '')
 
 $categories = db()->query('SELECT name, slug FROM categories ORDER BY name')->fetchAll();
 $cities = db()->query("SELECT DISTINCT city FROM events WHERE status = 'published' AND event_date >= CURDATE() ORDER BY city")->fetchAll(PDO::FETCH_COLUMN);
+$categoryCounts = [];
+foreach (db()->query(
+    "SELECT c.slug, COUNT(e.id) AS event_count
+     FROM categories c
+     LEFT JOIN events e ON e.category_id = c.id AND e.status = 'published' AND e.event_date >= CURDATE()
+     GROUP BY c.id, c.slug"
+)->fetchAll() as $row) {
+    $categoryCounts[$row['slug']] = (int) $row['event_count'];
+}
+$totalUpcoming = array_sum($categoryCounts);
 
 // Shared page layout
 $title = 'All events';

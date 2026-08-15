@@ -336,6 +336,19 @@ function event_poster(array $event): string
     };
 }
 
+function event_countdown(string $date): string
+{
+    $days = (int) round((strtotime($date) - strtotime(date('Y-m-d'))) / 86400);
+
+    return match (true) {
+        $days === 0 => 'Today',
+        $days === 1 => 'Tomorrow',
+        $days === -1 => 'Yesterday',
+        $days > 1 => 'In '.$days.' days',
+        default => abs($days).' days ago',
+    };
+}
+
 function customer_bookings(int $userId): array
 {
     $statement = db()->prepare(
