@@ -158,7 +158,9 @@ require dirname(__DIR__).'/includes/header.php';
                                     </div>
                                     <div class="organizer-progress"><span style="width: <?= $soldPercentage ?>%"></span></div>
                                 </div>
-                                <a class="organizer-row-action" href="<?= e(app_url('organizer-event-form', ['id' => $event['id']])) ?>" aria-label="Edit <?= e($event['title']) ?>">&rarr;</a>
+                                <a class="icon-btn organizer-row-action" href="<?= e(app_url('organizer-event-form', ['id' => $event['id']])) ?>" title="Edit event" aria-label="Edit <?= e($event['title']) ?>">
+                                    <?= icon('edit') ?>
+                                </a>
                             </article>
                         <?php endforeach; ?>
                     </div>

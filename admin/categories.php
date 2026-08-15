@@ -110,7 +110,9 @@ require dirname(__DIR__).'/includes/header.php';
                                         <?= csrf_field() ?>
                                         <input type="hidden" name="action" value="delete">
                                         <input type="hidden" name="id" value="<?= (int) $category['id'] ?>">
-                                        <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                                        <button class="icon-btn icon-btn-danger" type="submit" title="Delete category" aria-label="Delete <?= e($category['name']) ?>">
+                                            <?= icon('delete') ?>
+                                        </button>
                                     </form>
                                 <?php endif; ?>
                             </td>

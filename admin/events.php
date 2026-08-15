@@ -82,10 +82,14 @@ require dirname(__DIR__).'/includes/header.php';
                             <td><span class="status-badge status-<?= e($event['status']) ?>"><?= e(ucfirst($event['status'])) ?></span></td>
                             <td>
                                 <div class="table-actions">
-                                    <a class="btn btn-secondary btn-sm" href="<?= e(app_url('admin-event-form', ['id' => $event['id']])) ?>">Edit</a>
+                                    <a class="icon-btn" href="<?= e(app_url('admin-event-form', ['id' => $event['id']])) ?>" title="Edit event" aria-label="Edit <?= e($event['title']) ?>">
+                                        <?= icon('edit') ?>
+                                    </a>
                                     <form method="post" action="<?= e(app_url('admin-event-delete', ['id' => $event['id']])) ?>" data-confirm="Delete this event?">
                                         <?= csrf_field() ?>
-                                        <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                                        <button class="icon-btn icon-btn-danger" type="submit" title="Delete event" aria-label="Delete <?= e($event['title']) ?>">
+                                            <?= icon('delete') ?>
+                                        </button>
                                     </form>
                                 </div>
                             </td>

@@ -8,9 +8,13 @@ date_default_timezone_set($config['timezone']);
 if (session_status() !== PHP_SESSION_ACTIVE) {
     $sessionPath = dirname(__DIR__).'/database/sessions';
     if (! is_dir($sessionPath)) {
-        mkdir($sessionPath, 0700, true);
+        mkdir($sessionPath, 0777, true);
     }
-    session_save_path($sessionPath);
+    // Apache on XAMPP runs as daemon; 0700 dirs owned by the Mac user cannot store sessions.
+    @chmod($sessionPath, 0777);
+    if (is_dir($sessionPath) && is_writable($sessionPath)) {
+        session_save_path($sessionPath);
+    }
     session_name($config['session_name']);
     session_set_cookie_params([
         'httponly' => true,
@@ -60,6 +64,18 @@ $message = 'Database connection failed. Import database/nextik.sql and check dat
 function e(mixed $value): string
 {
     return htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+}
+
+function icon(string $name): string
+{
+    $icons = [
+        'view' => '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.6-7 9.5-7 9.5 7 9.5 7-3.6 7-9.5 7-9.5-7-9.5-7Z"/><circle cx="12" cy="12" r="3"/></svg>',
+        'edit' => '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17v3Z"/><path d="m13.5 6.5 3 3"/></svg>',
+        'ticket' => '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4V8Z"/><path d="M12 7.5v9"/></svg>',
+        'delete' => '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>',
+    ];
+
+    return $icons[$name] ?? '';
 }
 
 function web_root(): string
@@ -293,8 +309,9 @@ function event_by_id(int $id, bool $publishedOnly = false): ?array
 function booking_by_id(int $id): ?array
 {
     $statement = db()->prepare(
-        'SELECT b.*, e.title AS event_title, e.event_date, e.start_time, e.venue, e.city,
-                c.name AS category_name, u.name AS customer_name, u.email AS customer_email
+        'SELECT b.*, e.title AS event_title, e.event_date, e.start_time, e.end_time, e.venue, e.city, e.image,
+                c.name AS category_name, c.slug AS category_slug,
+                u.name AS customer_name, u.email AS customer_email
          FROM bookings b
          JOIN events e ON e.id = b.event_id
          JOIN categories c ON c.id = e.category_id
@@ -304,6 +321,35 @@ function booking_by_id(int $id): ?array
     $statement->execute([$id]);
 
     return $statement->fetch() ?: null;
+}
+
+function event_poster(array $event): string
+{
+    if (! empty($event['image'])) {
+        return 'images/'.ltrim((string) $event['image'], '/');
+    }
+
+    return match ((string) ($event['category_slug'] ?? '')) {
+        'concerts' => 'images/concert-card.png',
+        'edm' => 'images/edm-card.png',
+        default => 'images/hero-nextik.png',
+    };
+}
+
+function customer_bookings(int $userId): array
+{
+    $statement = db()->prepare(
+        'SELECT b.*, e.title AS event_title, e.event_date, e.start_time, e.venue, e.city, e.image,
+                c.name AS category_name, c.slug AS category_slug
+         FROM bookings b
+         JOIN events e ON e.id = b.event_id
+         JOIN categories c ON c.id = e.category_id
+         WHERE b.user_id = ?
+         ORDER BY e.event_date ASC, e.start_time ASC, b.created_at DESC'
+    );
+    $statement->execute([$userId]);
+
+    return $statement->fetchAll();
 }
 
 function payment_reference(): string
