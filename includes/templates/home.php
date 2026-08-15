@@ -74,7 +74,7 @@ $selectedCategory = $category;
             <p>Fresh experiences, selected from across Sri Lanka.</p>
         </div>
 
-        <div class="original-tabs">
+        <div class="category-pills original-tabs">
             <a class="category-pill <?= $selectedCategory === '' ? 'active' : '' ?>" href="<?= e(app_url()) ?>">Discover all</a>
             <?php foreach ($categories as $item): ?>
                 <a class="category-pill <?= $selectedCategory === $item['slug'] ? 'active' : '' ?>" href="<?= e(app_url('home', ['category' => $item['slug']])) ?>"><?= e($item['name']) ?></a>
