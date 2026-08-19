@@ -14,4 +14,4 @@ if ($user['role'] === 'organizer') {
     redirect_to('organizer-dashboard');
 }
 
-redirect_to('customer-dashboard')
+redirect_to('customer-dashboard');

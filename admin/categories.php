@@ -57,18 +57,17 @@ $categories = db()->query(
 )->fetchAll();
 
 $title = 'Categories';
+$bodyClass = 'admin-page admin-workspace';
 $user = current_user();
 $flashMessages = consume_flash();
 
 require dirname(__DIR__).'/includes/header.php';
 ?>
 
-<section class="page-header">
-    <div class="container narrow-wide">
-        <p class="eyebrow">ADMINISTRATION</p>
-        <h1>Categories</h1>
-        <p>Keep event discovery organized.</p>
-        <div class="page-toolbar">
+<section class="plain-page-head">
+    <div class="container plain-page-head-inner">
+        <div><span class="plain-page-label">Administration</span><h1>Categories</h1><p>Keep event discovery organized.</p></div>
+        <div class="plain-page-actions">
             <a class="btn btn-secondary" href="<?= e(app_url('admin-dashboard')) ?>">Dashboard</a>
             <a class="btn btn-secondary" href="<?= e(app_url('admin-events')) ?>">Events</a>
         </div>

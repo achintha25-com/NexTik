@@ -113,6 +113,8 @@ function app_url(string $page = 'home', array $parameters = []): string
         'admin-event-delete' => 'admin/events.php',
         'admin-categories' => 'admin/categories.php',
         'admin-messages' => 'admin/messages.php',
+        'admin-users' => 'admin/users.php',
+        'admin-reports' => 'admin/reports.php',
         'organizer-dashboard' => 'organizer/dashboard.php',
         'organizer-events' => 'organizer/events.php',
         'organizer-event-form' => 'organizer/event_form.php',

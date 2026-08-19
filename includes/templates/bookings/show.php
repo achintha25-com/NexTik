@@ -24,17 +24,16 @@ if (! empty($booking['end_time'])) {
 }
 ?>
 
-<section class="about-hero customer-hero">
-    <div class="about-hero-backdrop" aria-hidden="true"></div>
-    <div class="container about-hero-layout">
-        <div class="original-copy">
-            <span class="original-kicker"><i></i> BOOKING PASS</span>
+<section class="plain-page-head">
+    <div class="container plain-page-head-inner">
+        <div>
+            <span class="plain-page-label">Booking pass</span>
             <h1><?= e($booking['event_title']) ?></h1>
             <p><?= e($heroLine) ?></p>
-            <div class="original-actions no-print">
+        </div>
+        <div class="plain-page-actions no-print">
                 <button class="btn btn-primary" type="button" onclick="window.print()">Print pass</button>
-                <a class="original-link" href="<?= e($backUrl) ?>">Back to bookings <span>→</span></a>
-            </div>
+                <a class="btn btn-secondary" href="<?= e($backUrl) ?>">Back to bookings</a>
         </div>
     </div>
 </section>

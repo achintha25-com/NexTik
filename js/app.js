@@ -1,3 +1,26 @@
+const siteLoader = document.querySelector('[data-site-loader]');
+
+if (siteLoader) {
+    const introSeen = sessionStorage.getItem('nextik-intro-seen') === 'yes';
+
+    if (introSeen) {
+        siteLoader.classList.add('is-hidden');
+        document.body.classList.add('site-ready');
+    } else {
+        const startedAt = performance.now();
+        sessionStorage.setItem('nextik-intro-seen', 'yes');
+
+        window.addEventListener('load', () => {
+            const remaining = Math.max(0, 950 - (performance.now() - startedAt));
+            window.setTimeout(() => {
+                siteLoader.classList.add('is-complete');
+                document.body.classList.add('site-ready');
+                window.setTimeout(() => siteLoader.classList.add('is-hidden'), 520);
+            }, remaining);
+        }, { once: true });
+    }
+}
+
 document.querySelectorAll('[data-password-toggle]').forEach((button) => {
     button.addEventListener('click', () => {
         const input = document.getElementById(button.dataset.passwordToggle);

@@ -45,21 +45,20 @@ $countdown = static function (string $date): string {
 };
 ?>
 
-<section class="about-hero customer-hero">
-    <div class="about-hero-backdrop" aria-hidden="true"></div>
-    <div class="container about-hero-layout">
-        <div class="original-copy">
-            <span class="original-kicker"><i></i> YOUR TICKETS</span>
-            <h1>Welcome back, <span><?= e($firstName) ?>.</span></h1>
+<section class="plain-page-head">
+    <div class="container plain-page-head-inner">
+        <div>
+            <span class="plain-page-label">Your tickets</span>
+            <h1>My bookings</h1>
             <?php if ($next): ?>
                 <p>Next up: <?= e($next['event_title']) ?> · <?= e(date('M j', strtotime($next['event_date']))) ?> · <?= e($countdown($next['event_date'])) ?>.</p>
             <?php else: ?>
                 <p>Your confirmed nights, seats, and booking passes live here.</p>
             <?php endif; ?>
-            <div class="original-actions">
+        </div>
+        <div class="plain-page-actions">
                 <a class="btn btn-primary" href="<?= e(app_url()) ?>">Browse events</a>
-                <a class="original-link" href="<?= e(app_url('profile')) ?>">Account settings <span>→</span></a>
-            </div>
+                <a class="btn btn-secondary" href="<?= e(app_url('profile')) ?>">Account settings</a>
         </div>
     </div>
 </section>

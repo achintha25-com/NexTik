@@ -1,9 +1,8 @@
-<section class="about-hero customer-hero">
-    <div class="about-hero-backdrop" aria-hidden="true"></div>
-    <div class="container about-hero-layout">
-        <div class="original-copy">
-            <span class="original-kicker"><i></i> CHECKOUT</span>
-            <h1>Make it <span>official.</span></h1>
+<section class="plain-page-head">
+    <div class="container plain-page-head-inner">
+        <div>
+            <span class="plain-page-label">Checkout</span>
+            <h1>Choose tickets</h1>
             <p><?= e($event['title']) ?></p>
         </div>
     </div>

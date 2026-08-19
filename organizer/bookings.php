@@ -24,17 +24,16 @@ $statement->execute([$event['id']]);
 $bookings = $statement->fetchAll();
 
 $title = 'Event bookings';
+$bodyClass = 'organizer-page organizer-workspace';
 $flashMessages = consume_flash();
 
 require dirname(__DIR__).'/includes/header.php';
 ?>
 
-<section class="page-header">
-    <div class="container">
-        <p class="eyebrow">ORGANIZER WORKSPACE</p>
-        <h1>Bookings for <?= e($event['title']) ?></h1>
-        <p><?= number_format((int) $event['available_tickets']) ?> tickets remaining.</p>
-        <div class="page-toolbar"><a class="btn btn-secondary" href="<?= e(app_url('organizer-events')) ?>">Back to events</a></div>
+<section class="plain-page-head">
+    <div class="container plain-page-head-inner">
+        <div><span class="plain-page-label">Organizer workspace</span><h1>Bookings for <?= e($event['title']) ?></h1><p><?= number_format((int) $event['available_tickets']) ?> tickets remaining.</p></div>
+        <div class="plain-page-actions"><a class="btn btn-secondary" href="<?= e(app_url('organizer-events')) ?>">Back to events</a></div>
     </div>
 </section>
 

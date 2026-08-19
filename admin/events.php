@@ -32,18 +32,17 @@ $events = db()->query(
 )->fetchAll();
 
 $title = 'Manage events';
+$bodyClass = 'admin-page admin-workspace';
 $user = current_user();
 $flashMessages = consume_flash();
 
 require dirname(__DIR__).'/includes/header.php';
 ?>
 
-<section class="page-header">
-    <div class="container">
-        <p class="eyebrow">ADMINISTRATION</p>
-        <h1>Manage events</h1>
-        <p>Review and manage every published or draft event.</p>
-        <div class="page-toolbar">
+<section class="plain-page-head">
+    <div class="container plain-page-head-inner">
+        <div><span class="plain-page-label">Administration</span><h1>Manage events</h1><p>Review and manage every published or draft event.</p></div>
+        <div class="plain-page-actions">
             <a class="btn btn-primary" href="<?= e(app_url('admin-event-form')) ?>">Create event</a>
             <a class="btn btn-secondary" href="<?= e(app_url('admin-dashboard')) ?>">Dashboard</a>
             <a class="btn btn-secondary" href="<?= e(app_url('admin-categories')) ?>">Categories</a>

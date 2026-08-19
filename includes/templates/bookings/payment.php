@@ -1,9 +1,8 @@
-<section class="about-hero customer-hero">
-    <div class="about-hero-backdrop" aria-hidden="true"></div>
-    <div class="container about-hero-layout">
-        <div class="original-copy">
-            <span class="original-kicker"><i></i> SECURE PAYMENT</span>
-            <h1>Complete your <span>payment.</span></h1>
+<section class="plain-page-head">
+    <div class="container plain-page-head-inner">
+        <div>
+            <span class="plain-page-label">Secure payment</span>
+            <h1>Complete payment</h1>
             <p><?= e($event['title']) ?> · <?= e($selectedOption['name']) ?></p>
         </div>
     </div>

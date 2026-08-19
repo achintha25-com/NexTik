@@ -30,11 +30,12 @@ if (is_post()) {
 $categories = db()->query('SELECT id, name FROM categories ORDER BY name')->fetchAll();
 $organizers = db()->query("SELECT id, name FROM users WHERE role = 'organizer' ORDER BY name")->fetchAll();
 $title = $event ? 'Edit event' : 'Create event';
+$bodyClass = 'admin-page admin-workspace';
 $user = current_user();
 $flashMessages = consume_flash();
 require dirname(__DIR__).'/includes/header.php';
 ?>
-<section class="about-hero event-form-hero"><div class="about-hero-backdrop" aria-hidden="true"></div><div class="container about-hero-layout"><div class="original-copy"><span class="original-kicker"><i></i> ADMINISTRATION</span><h1><?= e($title) ?> <span>for NexTik.</span></h1><p>Complete the event details below. Required fields are marked.</p></div></div></section>
+<section class="plain-page-head"><div class="container plain-page-head-inner"><div><span class="plain-page-label">Administration</span><h1><?= e($title) ?></h1><p>Complete the event details below. Required fields are marked.</p></div></div></section>
 <section class="section compact-top"><div class="container narrow-wide"><div class="form-card">
 <?php if($errors): ?><div class="alert alert-error"><strong>Please correct the following:</strong><ul><?php foreach($errors as $error): ?><li><?= e($error) ?></li><?php endforeach; ?></ul></div><?php endif; ?>
 <form method="post" enctype="multipart/form-data" action="<?= e(app_url('admin-event-form', $event && isset($event['id']) ? ['id'=>$event['id']] : [])) ?>"><?= csrf_field() ?>

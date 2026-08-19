@@ -15,12 +15,12 @@ $dashboardRoute = match ($profile['role']) {
 };
 ?>
 
-<section class="about-hero profile-hero">
-    <div class="about-hero-backdrop" aria-hidden="true"></div>
-    <div class="container about-hero-layout">
-        <div class="original-copy">
-            <span class="original-kicker"><i></i> ACCOUNT SETTINGS</span>
-            <h1>Your NexTik profile, <span>all in one place.</span></h1>
+<section class="plain-page-head">
+    <div class="container plain-page-head-inner">
+        <div>
+            <span class="plain-page-label">Account settings</span>
+            <h1>Profile</h1>
+            <p>Manage your personal details and account security.</p>
         </div>
     </div>
 </section>

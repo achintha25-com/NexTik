@@ -17,17 +17,16 @@ $statement->execute([$user['id']]);
 $events = $statement->fetchAll();
 
 $title = 'My events';
+$bodyClass = 'organizer-page organizer-workspace';
 $flashMessages = consume_flash();
 
 require dirname(__DIR__).'/includes/header.php';
 ?>
 
-<section class="page-header">
-    <div class="container">
-        <p class="eyebrow">ORGANIZER WORKSPACE</p>
-        <h1>My events</h1>
-        <p>Create events and track their booking performance.</p>
-        <div class="page-toolbar">
+<section class="plain-page-head">
+    <div class="container plain-page-head-inner">
+        <div><span class="plain-page-label">Organizer workspace</span><h1>My events</h1><p>Create events and track their booking performance.</p></div>
+        <div class="plain-page-actions">
             <a class="btn btn-primary" href="<?= e(app_url('organizer-event-form')) ?>">Create event</a>
         </div>
     </div>

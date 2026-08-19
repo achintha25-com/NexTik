@@ -40,20 +40,19 @@ $messages = db()->query(
 )->fetchAll();
 
 $title = 'Contact messages';
-$bodyClass = 'admin-messages-page';
+$bodyClass = 'admin-messages-page admin-workspace';
 $flashMessages = consume_flash();
 
 require dirname(__DIR__).'/includes/header.php';
 ?>
 
-<section class="about-hero admin-messages-hero">
-    <div class="about-hero-backdrop" aria-hidden="true"></div>
-    <div class="container about-hero-layout">
-        <div class="original-copy">
-            <span class="original-kicker"><i></i> ADMIN INBOX</span>
-            <h1>Keep every conversation <span>moving forward.</span></h1>
-            <p>Read customer enquiries, save thoughtful replies, and keep your event community supported.</p>
-        </div>
+<section class="plain-page-head">
+    <div class="container plain-page-head-inner">
+      <div>
+        <span class="plain-page-label">Support inbox</span>
+        <h1>Contact messages</h1>
+        <p>Read customer enquiries and save replies.</p>
+      </div>
     </div>
 </section>
 
@@ -61,8 +60,8 @@ require dirname(__DIR__).'/includes/header.php';
     <div class="container">
         <div class="admin-messages-heading">
             <div>
-                <p class="eyebrow">SUPPORT INBOX</p>
-                <h2>Contact messages</h2>
+                <p class="eyebrow">MESSAGES</p>
+                <h2>Customer enquiries</h2>
             </div>
             <span class="messages-count"><?= count($messages) ?> <?= count($messages) === 1 ? 'message' : 'messages' ?></span>
         </div>

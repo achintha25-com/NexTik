@@ -1,5 +1,7 @@
 </main>
+<?php if ($isRoleWorkspace ?? false): ?></div><?php endif; ?>
 
+<?php if (! ($isRoleWorkspace ?? false)): ?>
 <footer class="site-footer">
     <div class="container footer-grid">
         <div>
@@ -21,6 +23,7 @@
     </div>
     <div class="container footer-bottom">&copy; <?= date('Y') ?> NexTik. All Rights Reserved.</div>
 </footer>
+<?php endif; ?>
 <script src="<?= e(asset_url('js/app.js')) ?>" defer></script>
 </body>
 

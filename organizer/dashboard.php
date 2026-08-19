@@ -57,18 +57,18 @@ $publishedEvents = count(array_filter(
 ));
 
 $title = 'Organizer dashboard';
-$bodyClass = 'organizer-page';
+$bodyClass = 'organizer-page organizer-workspace';
 $flashMessages = consume_flash();
 
 require dirname(__DIR__).'/includes/header.php';
 ?>
 
-<section class="about-hero organizer-hero">
-    <div class="about-hero-backdrop" aria-hidden="true"></div>
-    <div class="container about-hero-layout">
-        <div class="original-copy">
-            <span class="original-kicker"><i></i> ORGANIZER WORKSPACE</span>
-            <h1>Manage every event <span>with confidence.</span></h1>
+<section class="plain-page-head">
+    <div class="container plain-page-head-inner">
+        <div>
+            <span class="plain-page-label">Organizer workspace</span>
+            <h1>Dashboard overview</h1>
+            <p>Welcome back, <?= e($user['name']) ?>. Manage your events and bookings.</p>
         </div>
     </div>
 </section>

@@ -1,6 +1,5 @@
 <?php
 
-$spotlight = $featured[0] ?? $events[0] ?? null;
 $selectedCategory = $category;
 $hasFilters = $search !== '' || $category !== '' || $city !== '' || $date !== '';
 $baseFilters = array_filter([
@@ -29,53 +28,21 @@ $catalogTitle = match (true) {
     <div class="original-backdrop" aria-hidden="true"></div>
     <div class="container original-hero-layout">
         <div class="original-copy">
-            <span class="original-kicker"><i></i> <?= $firstName !== '' ? 'WELCOME BACK, '.e(mb_strtoupper($firstName)) : 'EVENTS MADE SIMPLE' ?></span>
-            <h1>Sri Lanka's best<br>moments, <span>one ticket away.</span></h1>
-            <p>From live stages to family festivals, find the night, lock the seats, and keep every pass in one place.</p>
-
-            <div class="original-actions">
-                <a class="btn btn-primary" href="#events">Browse events</a>
-                <a class="original-link" href="<?= e(app_url('about')) ?>">How NexTik works <span>→</span></a>
-            </div>
-
-            <div class="original-stats">
-                <div><strong><?= count($events) ?>+</strong><span><?= $hasFilters ? 'Matching events' : 'Upcoming events' ?></span></div>
-                <div><strong><?= count($categories) ?></strong><span>Event categories</span></div>
-                <div><strong><?= count($cities) ?></strong><span>Cities this season</span></div>
-            </div>
+            <h1>Find your next<br><span>event.</span></h1>
+            <p>Discover events across Sri Lanka and book your tickets in a few simple steps.</p>
         </div>
 
-        <?php if ($spotlight): ?>
-            <a class="spotlight-card" href="<?= e(app_url('event', ['id' => $spotlight['id']])) ?>">
-                <div class="spotlight-media" style="background-image:linear-gradient(180deg,rgba(5,6,14,.12),rgba(5,6,14,.82)),url('<?= e(asset_url(event_poster($spotlight))) ?>')">
-                    <span>Editor's pick</span>
-                    <div class="spotlight-date">
-                        <strong><?= e(date('j', strtotime($spotlight['event_date']))) ?></strong>
-                        <em><?= e(date('M', strtotime($spotlight['event_date']))) ?></em>
-                    </div>
-                </div>
-                <div class="spotlight-body">
-                    <small><?= e(strtoupper($spotlight['category_name'])) ?> · <?= e(event_countdown($spotlight['event_date'])) ?></small>
-                    <h2><?= e($spotlight['title']) ?></h2>
-                    <p><?= e($spotlight['venue']) ?> · <?= e($spotlight['city']) ?></p>
-                    <div class="spotlight-footer">
-                        <span>From<strong>LKR <?= number_format((float) $spotlight['price'], 0) ?></strong></span>
-                        <span class="spotlight-cta">View event →</span>
-                    </div>
-                </div>
-            </a>
-        <?php endif; ?>
-    </div>
-
-    <div class="finder-wrap">
-        <div class="container">
-            <form class="event-finder" method="get" action="<?= e(app_url()) ?>">
+        <aside class="home-hero-search" aria-label="Find an event">
+            <div class="home-hero-search-heading">
+                <small>Discover what is next</small>
+                <h2>Search events</h2>
+            </div>
+            <form class="event-finder simple-event-search" method="get" action="<?= e(app_url()) ?>">
                 <input type="hidden" name="page" value="home">
                 <?php if ($category !== ''): ?><input type="hidden" name="category" value="<?= e($category) ?>"><?php endif; ?>
-                <div class="finder-intro"><small>START HERE</small><strong><?= $hasFilters ? 'Refine this search' : 'Find an event' ?></strong></div>
                 <label class="finder-field finder-keyword">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>
-                    <span><small>Experience</small><input name="search" value="<?= e($search) ?>" placeholder="Concert, sport, festival..."></span>
+                    <span><small>Search events</small><input name="search" value="<?= e($search) ?>" placeholder="Event name or category"></span>
                 </label>
                 <label class="finder-field">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11Z"/><circle cx="12" cy="10" r="2.3"/></svg>
@@ -85,9 +52,9 @@ $catalogTitle = match (true) {
                     <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M8 3.5v3M16 3.5v3M3.5 10h17"/></svg>
                     <span><small>Date</small><input name="date" type="date" value="<?= e($date) ?>"></span>
                 </label>
-                <button class="finder-button" type="submit">Explore <span>→</span></button>
+                <button class="finder-button" type="submit">Search</button>
             </form>
-        </div>
+        </aside>
     </div>
 </section>
 
@@ -143,6 +110,18 @@ $catalogTitle = match (true) {
                     <?php require __DIR__.'/partials/event-card.php'; ?>
                 <?php endforeach; ?>
             </div>
+            <aside class="catalog-outro">
+                <div>
+                    <span class="catalog-outro-icon" aria-hidden="true">✦</span>
+                    <p>YOUR NEXT STORY STARTS HERE</p>
+                    <h2>Not sure what fits your mood?</h2>
+                    <span>Tell us what you enjoy and we’ll help you find an experience worth remembering.</span>
+                </div>
+                <div class="catalog-outro-actions">
+                    <a class="btn btn-primary" href="<?= e(app_url('contact')) ?>">Ask NexTik</a>
+                    <a class="btn btn-secondary" href="#events">Browse again ↑</a>
+                </div>
+            </aside>
         <?php else: ?>
             <div class="booking-empty home-empty">
                 <strong>No events match those filters.</strong>
